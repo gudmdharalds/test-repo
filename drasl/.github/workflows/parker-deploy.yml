@@ -39,8 +39,8 @@ jobs:
       - name: Deploy code
         run: |
           cd "parker-deploy" && \
-          git status && \
           date +%s > timestamp.txt && \
+          sed -i '1s/^/# DO NOT MAKE CHANGES\nNo changes should be made against this branch. Only make changes against "trunk".\n\n/' README.md && \           
           git add -A && \
           git commit -a -m 'Deploying to "parker-deploy" branch' && \
           git push --set-upstream origin parker-deploy && \

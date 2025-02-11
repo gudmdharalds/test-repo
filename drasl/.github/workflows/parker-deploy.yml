@@ -34,5 +34,6 @@ jobs:
           pushd "$CURR_DIR/parker-deploy" && \
           git status && \
           date +%s > timestamp.txt && \
+          git add -A && \
           git commit -a -m 'Deploying to "parker-deploy" branch' && \
           git push --set-upstream origin parker-deploy

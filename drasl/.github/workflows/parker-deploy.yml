@@ -30,7 +30,7 @@ jobs:
         run: |
           CURR_DIR=$(pwd)
           find . && \
-          rsync -av --delete "$CURR_DIR/main-code/parker/." "$CURR_DIR/parker-deploy" && \
+          rsync -av --delete "$CURR_DIR/main-code/parker/." "$CURR_DIR/parker-deploy/." && \
           pushd "$CURR_DIR/parker-deploy" && \
           git status && \
           git commit -a -m 'Deploying to "parker-deploy" branch' . && \

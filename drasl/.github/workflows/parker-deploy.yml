@@ -20,7 +20,6 @@ jobs:
           find .
           CURR_DIR=$(pwd)
           tar -zcvf /tmp/p.tar.gz -C parker/ . && \
-          git branch -D parker-deploy && \
           git checkout -b parker-deploy && \
           rm -rf "$CURR_DIR/*" && \
           tar -zxvf /tmp/p.tar.gz && \

@@ -1,0 +1,25 @@
+name: Parker deployment
+
+on:
+  push:
+    branches:
+      - trunk
+
+permissions:
+  contents: write
+
+jobs:
+  deploy-parker:
+    name: Deploy Parker-code to "parker-deploy" branch
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Deploy code
+        run: |
+          CURR_DIR=$(pwd)
+          tar -zcvf /tmp/p.tar.gz -C parker/ . && \
+          git branch -D parker-deploy && \
+          git checkout -b parker-deploy && \
+          rm -rf "$CURR_DIR/*" && \
+          tar -zxvf /tmp/p.tar.gz && \
+          git status && \
+          git commit -m 'Deploying to "parker-deploy" branch' .

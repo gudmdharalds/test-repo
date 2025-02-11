@@ -19,8 +19,8 @@ jobs:
           path: main-code
       - name: Checkout "parker-deploy
         uses: actions/checkout@v4
-         with:
-           path: parker-deploy
+        with:
+          path: parker-deploy
       - name: Configure git for commits
         run: |
           git config --global user.email "parker-deploy@example.com"

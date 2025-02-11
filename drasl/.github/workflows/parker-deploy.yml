@@ -15,16 +15,21 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up git
+        with:
+          path: main-code
+      - name: Checkout "parker-deploy
+        uses: actions/checkout@v4
+         with:
+           path: parker-deploy
+      - name: Configure git for commits
         run: |
           git config --global user.email "parker-deploy@example.com"
           git config --global user.name "parker-deploy GitHub Action"
       - name: Deploy code
         run: |
           CURR_DIR=$(pwd)
+          find .
           tar -zcvf /tmp/p.tar.gz -C parker/ . && \
-          git pull && \
-          git checkout -b parker-deploy && \
           git pull && \
           rm -rf "$CURR_DIR/*" && \
           tar -zxvf /tmp/p.tar.gz && \

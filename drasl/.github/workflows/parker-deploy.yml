@@ -15,6 +15,7 @@ jobs:
     steps:
       - name: Deploy code
         run: |
+          find .
           CURR_DIR=$(pwd)
           tar -zcvf /tmp/p.tar.gz -C parker/ . && \
           git branch -D parker-deploy && \

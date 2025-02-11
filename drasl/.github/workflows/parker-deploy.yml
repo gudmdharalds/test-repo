@@ -29,12 +29,10 @@ jobs:
 
       - name: Sync Parker code to "parker-deploy"
         run: |
-          CURR_DIR=$(pwd)
-          find . && \
-          rsync -av --delete --exclude ".git/*" "$CURR_DIR/main-code/parker/." "$CURR_DIR/parker-deploy/." && \
+          rsync -av --delete --exclude ".git/*" "main-code/parker/." "parker-deploy/."
       - name: Deploy code
         run: |
-          pushd "$CURR_DIR/parker-deploy" && \
+          cd "parker-deploy" && \
           git status && \
           date +%s > timestamp.txt && \
           git add -A && \

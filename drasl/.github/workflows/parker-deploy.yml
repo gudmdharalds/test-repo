@@ -38,11 +38,22 @@ jobs:
       # Add timestamp file to ensure changes, commit and push to "parker-deploy" branch
       - name: Deploy code
         run: |
-          cd "parker-deploy" && \
-          date +%s > timestamp.txt && \
-          sed -i '1s/^/# DO NOT MAKE CHANGES\nNo changes should be made against this branch. Only make changes against "trunk".\n\n/' README.md && \
-          git add -A && \
-          git commit -a -m 'Deploying to "parker-deploy" branch' && \
-          git push --set-upstream origin parker-deploy && \
-          echo -n 'Deployed commit with ID ' && \
+          cd "parker-deploy"
+
+          # Add comment about not making changes.
+          sed -i '1s/^/# DO NOT MAKE CHANGES\nNo changes should be made against this branch. Only make changes against "trunk".\n\n/' README.md
+
+          # Check if there are any changes. Exit gracefully if there are none.
+          if [ "$(git status --porcelain)" == "" ] ; then
+             echo "No changes made, exiting"
+             exit 0
+          fi
+
+          # Ok, changes, so commit those.
+          git add -A
+          git commit -a -m 'Deploying to "parker-deploy" branch'
+          git push --set-upstream origin parker-deploy
+
+          # Final message and note commit ID.
+          echo -n 'Deployed commit with ID '
           git log -n 1 | grep ^commit -A 0 -B 0 | awk '{print $2}'

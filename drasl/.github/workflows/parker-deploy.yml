@@ -21,18 +21,17 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: parker-deploy
+          ref: parker-deploy
       - name: Configure git for commits
         run: |
-          git config --global user.email "parker-deploy@example.com"
+          git config --global user.email "{user.id}+{user.login}@users.noreply.github.com"
           git config --global user.name "parker-deploy GitHub Action"
       - name: Deploy code
         run: |
           CURR_DIR=$(pwd)
-          find .
-          tar -zcvf /tmp/p.tar.gz -C parker/ . && \
-          git pull && \
-          rm -rf "$CURR_DIR/*" && \
-          tar -zxvf /tmp/p.tar.gz && \
+          find . && \
+          rsync -av --delete "$CURR_DIR/main-code/parker/." "$CURR_DIR/parker-deploy" && \
+          pushd "$CURR_DIR/parker-deploy" && \
           git status && \
           git commit -a -m 'Deploying to "parker-deploy" branch' . && \
           git push --set-upstream origin parker-deploy

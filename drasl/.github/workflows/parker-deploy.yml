@@ -21,9 +21,9 @@ jobs:
           git config --global user.name "parker-deploy GitHub Action"
       - name: Deploy code
         run: |
-          find .
           CURR_DIR=$(pwd)
           tar -zcvf /tmp/p.tar.gz -C parker/ . && \
+          git pull && \
           git checkout -b parker-deploy && \
           rm -rf "$CURR_DIR/*" && \
           tar -zxvf /tmp/p.tar.gz && \

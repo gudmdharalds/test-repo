@@ -1,3 +1,5 @@
+# Workflow to push changes to the "/parker" directory to "parker-deploy" branch.
+
 name: Parker deployment
 
 on:
@@ -13,23 +15,27 @@ jobs:
     name: Deploy Parker-code to "parker-deploy" branch
     runs-on: ubuntu-latest
     steps:
+      # Check out main branch
       - name: Checkout
         uses: actions/checkout@v4
         with:
           path: main-code
+      # Check out parker-deploy branch
       - name: Checkout "parker-deploy
         uses: actions/checkout@v4
         with:
           path: parker-deploy
           ref: parker-deploy
+      # Set up git to be able to commit
       - name: Configure git for commits
         run: |
           git config --global user.email "{user.id}+{user.login}@users.noreply.github.com"
           git config --global user.name "parker-deploy GitHub Action"
-
+      # Do the actual syncing
       - name: Sync Parker code to "parker-deploy"
         run: |
           rsync -av --delete --exclude ".git/*" "main-code/parker/." "parker-deploy/."
+      # Add timestamp file to ensure changes, commit and push to "parker-deploy" branch
       - name: Deploy code
         run: |
           cd "parker-deploy" && \

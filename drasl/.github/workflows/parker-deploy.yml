@@ -14,7 +14,11 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v4    
+        uses: actions/checkout@v4
+      - name: Set up git
+        run: |
+          git config --global user.email "parker-deploy@example.com"
+          git config --global user.name "parker-deploy GitHub Action"
       - name: Deploy code
         run: |
           find .
@@ -24,4 +28,6 @@ jobs:
           rm -rf "$CURR_DIR/*" && \
           tar -zxvf /tmp/p.tar.gz && \
           git status && \
-          git commit -m 'Deploying to "parker-deploy" branch' .
+          git add . && \
+          git commit -m 'Deploying to "parker-deploy" branch' . && \
+          git push --set-upstream origin parker-deploy

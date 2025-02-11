@@ -37,4 +37,6 @@ jobs:
           date +%s > timestamp.txt && \
           git add -A && \
           git commit -a -m 'Deploying to "parker-deploy" branch' && \
-          git push --set-upstream origin parker-deploy
+          git push --set-upstream origin parker-deploy && \
+          echo -n 'Deployed commit with ID ' && \
+          git log -n 1 | grep ^commit -A 0 -B 0 | awk '{print $2}'

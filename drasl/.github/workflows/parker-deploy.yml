@@ -25,9 +25,9 @@ jobs:
           tar -zcvf /tmp/p.tar.gz -C parker/ . && \
           git pull && \
           git checkout -b parker-deploy && \
+          git pull && \
           rm -rf "$CURR_DIR/*" && \
           tar -zxvf /tmp/p.tar.gz && \
           git status && \
-          git add . && \
-          git commit -m 'Deploying to "parker-deploy" branch' . && \
+          git commit -a -m 'Deploying to "parker-deploy" branch' . && \
           git push --set-upstream origin parker-deploy

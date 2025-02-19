@@ -1,6 +1,6 @@
-# Workflow to push changes to the "/parker" directory to "parker-deploy" branch.
+# Workflow to push changes to the "/api-wpvip-com" directory to "api-wpvip-com-deploy" branch.
 
-name: Parker deployment
+name: api-wpvip-com deployment
 
 on:
   push:
@@ -11,34 +11,34 @@ permissions:
   contents: write
 
 jobs:
-  deploy-parker:
-    name: Deploy Parker-code to "parker-deploy" branch
+  deploy-api-wpvip-com:
+    name: Deploy api-wpvip-com (old Parker / Automattic/vip-go-api-public) code to "api-wpvip-com-deploy" branch
     runs-on: ubuntu-latest
     steps:
       # Check out main branch
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          path: main-code
-      # Check out parker-deploy branch
-      - name: Checkout "parker-deploy
+          path: vip-go-api
+      # Check out api-wpvip-com-deploy branch
+      - name: Checkout "api-wpvip-com-deploy"
         uses: actions/checkout@v4
         with:
-          path: parker-deploy
-          ref: parker-deploy
+          path: api-wpvip-com
+          ref: api-wpvip-com-deploy
       # Set up git to be able to commit
       - name: Configure git for commits
         run: |
           git config --global user.email "{user.id}+{user.login}@users.noreply.github.com"
-          git config --global user.name "parker-deploy GitHub Action"
+          git config --global user.name "api-wpvip-com GitHub Action"
       # Do the actual syncing
-      - name: Sync Parker code to "parker-deploy"
+      - name: Sync "vip-go-api/api-wpvip-com/" (old Parker) code to "api-wpvip-com-deploy" branch
         run: |
-          rsync -av --delete --exclude ".git/*" "main-code/parker/." "parker-deploy/."
-      # Add timestamp file to ensure changes, commit and push to "parker-deploy" branch
+          rsync -av --delete --exclude ".git/*" "vip-go-api/api-wpvip-com/." "api-wpvip-com/."
+      # Commit and push to "api-wpvip-com-deploy" branch if changes have been made.
       - name: Deploy code
         run: |
-          cd "parker-deploy"
+          cd "api-wpvip-com"
 
           # Add comment about not making changes.
           sed -i '1s/^/# DO NOT MAKE CHANGES\nNo changes should be made against this branch. Only make changes against "trunk".\n\n/' README.md
@@ -50,9 +50,9 @@ jobs:
           fi
 
           # Ok, changes, so commit those.
-          git add -A
-          git commit -a -m 'Deploying to "parker-deploy" branch'
-          git push --set-upstream origin parker-deploy
+          git add --all
+          git commit -a -m 'Deploying to "api-wpvip-com-deploy" branch'
+          git push --set-upstream origin api-wpvip-com-deploy
 
           # Final message and note commit ID.
           echo -n 'Deployed commit with ID '

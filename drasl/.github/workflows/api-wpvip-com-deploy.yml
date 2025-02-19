@@ -16,12 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Check out main branch
-      - name: Checkout
+      - name: Checkout default branch
         uses: actions/checkout@v4
         with:
           path: vip-go-api
       # Check out api-wpvip-com-deploy branch
-      - name: Checkout "api-wpvip-com-deploy"
+      - name: Checkout "api-wpvip-com-deploy" branch
         uses: actions/checkout@v4
         with:
           path: api-wpvip-com

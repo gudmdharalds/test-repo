@@ -1,0 +1,59 @@
+# Workflow to push changes to the "/api-wpvip-com" directory to "api-wpvip-com-deploy" branch.
+
+name: api-wpvip-com deployment
+
+on:
+  push:
+    branches:
+      - trunk
+
+permissions:
+  contents: write
+
+jobs:
+  deploy-api-wpvip-com:
+    name: Deploy api-wpvip-com (old Parker / Automattic/vip-go-api-public) code to "api-wpvip-com-deploy" branch
+    runs-on: ubuntu-latest
+    steps:
+      # Check out main branch
+      - name: Checkout default branch
+        uses: actions/checkout@v4
+        with:
+          path: vip-go-api
+      # Check out api-wpvip-com-deploy branch
+      - name: Checkout "api-wpvip-com-deploy" branch
+        uses: actions/checkout@v4
+        with:
+          path: api-wpvip-com
+          ref: api-wpvip-com-deploy
+      # Set up git to be able to commit
+      - name: Configure git for commits
+        run: |
+          git config --global user.email "{user.id}+{user.login}@users.noreply.github.com"
+          git config --global user.name "api-wpvip-com GitHub Action"
+      # Do the actual syncing
+      - name: Sync "vip-go-api/api-wpvip-com/" (old Parker) code to "api-wpvip-com-deploy" branch
+        run: |
+          rsync -av --delete --exclude ".git/*" "vip-go-api/api-wpvip-com/." "api-wpvip-com/."
+      # Commit and push to "api-wpvip-com-deploy" branch if changes have been made.
+      - name: Deploy code
+        run: |
+          cd "api-wpvip-com"
+
+          # Add comment about not making changes.
+          sed -i '1s/^/# DO NOT MAKE CHANGES\nNo changes should be made against this branch. Only make changes against "trunk".\n\n/' README.md
+
+          # Check if there are any changes. Exit gracefully if there are none.
+          if [ "$(git status --porcelain)" == "" ] ; then
+             echo "No changes made, exiting"
+             exit 0
+          fi
+
+          # Ok, changes, so commit those.
+          git add --all
+          git commit -a -m 'Deploying to "api-wpvip-com-deploy" branch'
+          git push --set-upstream origin api-wpvip-com-deploy
+
+          # Final message and note commit ID.
+          echo -n 'Deployed commit with ID '
+          git log -n 1 | grep ^commit -A 0 -B 0 | awk '{print $2}'
